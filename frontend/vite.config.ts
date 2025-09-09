@@ -13,7 +13,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://okiedokie-utility.onrender.com', // Update this
+        target: 'http://localhost:3001', // Local backend
         changeOrigin: true,
       },
     },

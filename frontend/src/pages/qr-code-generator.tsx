@@ -19,6 +19,8 @@ import {
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { copyToClipboard } from '@/lib/utils'
+import { buildApiUrl, API_CONFIG } from '@/config/api'
+import { DebugInfo } from '@/components/debug-info'
 
 interface QRCodeConfig {
   type: 'url' | 'text' | 'wifi' | 'contact' | 'email' | 'sms'
@@ -72,7 +74,7 @@ export function QRCodeGenerator() {
     setIsGenerating(true)
 
     try {
-      const response = await fetch('/api/qr-code/generate', {
+      const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.QR_CODE.GENERATE), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,12 +83,17 @@ export function QRCodeGenerator() {
       })
 
       if (!response.ok) {
+        // Check if response is HTML (error page)
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('text/html')) {
+          throw new Error('Backend server is not available. Please check if the server is running.')
+        }
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const contentType = response.headers.get('content-type')
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response is not JSON')
+        throw new Error('Backend server returned invalid response. Please check if the server is running.')
       }
 
       const result = await response.json()
@@ -102,7 +109,17 @@ export function QRCodeGenerator() {
         description: "Your QR code has been generated successfully",
       })
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to generate QR code'
+      let errorMessage = 'Failed to generate QR code'
+      
+      if (err instanceof Error) {
+        errorMessage = err.message
+      }
+      
+      // Check for network errors
+      if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+        errorMessage = 'Cannot connect to the server. Please check your internet connection and try again.'
+      }
+      
       toast({
         title: "Error",
         description: errorMessage,
@@ -383,6 +400,9 @@ export function QRCodeGenerator() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Debug Info - Remove this after fixing the issue */}
+      <DebugInfo />
 
       {/* Examples */}
       <Card>
