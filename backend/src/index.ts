@@ -28,12 +28,36 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// Configure CORS
+const allowedOrigins = [
+  'https://okiedokie-utility.web.app',
+  'https://okiedokie-utility.firebaseapp.com',
+  'http://localhost:5173', // Development
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 const server = createServer(app);
+
+// CORS configuration
+const corsOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ["http://localhost:5173", "https://okiedokie-utility.web.app"];
 
 // Socket.IO configuration
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: corsOrigins,
     methods: ["GET", "POST"],
     credentials: true
   },
@@ -66,9 +90,8 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  origin: corsOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']

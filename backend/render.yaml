@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: okiedokie-utility-backend
+    env: node
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: https://okiedokie-utility.web.app,http://localhost:5173
+      - key: PORT
+        value: 10000

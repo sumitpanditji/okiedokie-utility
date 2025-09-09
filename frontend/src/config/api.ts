@@ -9,8 +9,8 @@ const getApiBaseUrl = (): string => {
   }
   
   // In production, use the deployed backend URL
-  // Replace this with your actual deployed backend URL
-  const productionApiUrl = import.meta.env.VITE_API_URL || 'https://your-app-name.onrender.com'
+  // You need to set VITE_API_URL environment variable in your deployment
+  const productionApiUrl = import.meta.env.VITE_API_URL || 'https://okiedokie-utility-backend.onrender.com'
   
   return productionApiUrl
 }

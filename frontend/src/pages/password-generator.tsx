@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { copyToClipboard } from '@/lib/utils'
+import { buildApiUrl, API_CONFIG } from '@/config/api'
 
 interface PasswordConfig {
   length: number
@@ -49,7 +50,8 @@ export function PasswordGenerator() {
     setIsGenerating(true)
 
     try {
-      const response = await fetch('/api/password-generator/generate', {
+      const apiUrl = buildApiUrl(API_CONFIG.ENDPOINTS.PASSWORD_GENERATOR.GENERATE)
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
