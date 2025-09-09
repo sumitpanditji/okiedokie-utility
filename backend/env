@@ -1,7 +1,7 @@
 # Server Configuration
-NODE_ENV=development
+NODE_ENV=production
 PORT=3001
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=https://your-firebase-app.web.app
 
 # File Upload Configuration
 MAX_FILE_SIZE=50MB
@@ -13,7 +13,7 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 
 # Security
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=https://your-firebase-app.web.app
 
 # Google Drive Configuration (for Document Link Fetcher)
 GOOGLE_DRIVE_API_KEY=your_api_key_here
