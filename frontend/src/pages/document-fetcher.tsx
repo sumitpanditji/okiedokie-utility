@@ -86,6 +86,12 @@ export function DocumentFetcher() {
       setSocketConnected(false)
     })
 
+    newSocket.on('connect_error', (error) => {
+      console.error('❌ Socket.IO connection error:', error)
+      setSocketConnected(false)
+      setError('Unable to connect to server. Please check if the backend is running.')
+    })
+
     newSocket.on('document-fetcher:start', (data) => {
       console.log('🎯 Processing started:', data)
       setJobId(data.jobId)
@@ -172,6 +178,15 @@ export function DocumentFetcher() {
         body: formData
       })
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON')
+      }
+
       const result = await response.json()
 
       if (!result.success) {
@@ -228,6 +243,15 @@ export function DocumentFetcher() {
           config
         }),
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON')
+      }
 
       const result = await response.json()
 

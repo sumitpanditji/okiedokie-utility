@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { ApiStatus } from '@/components/api-status'
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
@@ -39,28 +40,31 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navigation.map((item) => {
-              const isActive = location.pathname === item.href
-              return (
-                <Button
-                  key={item.name}
-                  variant={isActive ? "default" : "ghost"}
-                  size="sm"
-                  asChild
-                  className={cn(
-                    "transition-colors",
-                    isActive && "bg-primary text-primary-foreground"
-                  )}
-                >
-                  <Link to={item.href} className="flex items-center space-x-2">
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </Link>
-                </Button>
-              )
-            })}
-          </nav>
+          <div className="hidden md:flex items-center space-x-4">
+            <nav className="flex items-center space-x-1">
+              {navigation.map((item) => {
+                const isActive = location.pathname === item.href
+                return (
+                  <Button
+                    key={item.name}
+                    variant={isActive ? "default" : "ghost"}
+                    size="sm"
+                    asChild
+                    className={cn(
+                      "transition-colors",
+                      isActive && "bg-primary text-primary-foreground"
+                    )}
+                  >
+                    <Link to={item.href} className="flex items-center space-x-2">
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </Button>
+                )
+              })}
+            </nav>
+            <ApiStatus />
+          </div>
 
           {/* Mobile menu button */}
           <Button
@@ -80,6 +84,10 @@ export function Header() {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t">
+            <div className="flex items-center justify-between px-4 py-2">
+              <span className="text-sm text-muted-foreground">API Status:</span>
+              <ApiStatus />
+            </div>
             <nav className="flex flex-col space-y-1 py-4">
               {navigation.map((item) => {
                 const isActive = location.pathname === item.href

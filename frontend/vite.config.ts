@@ -1,20 +1,19 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": "/src",
     },
   },
   server: {
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://your-render-app.onrender.com', // Update this
+        target: 'https://okiedokie-utility.onrender.com', // Update this
         changeOrigin: true,
       },
     },
